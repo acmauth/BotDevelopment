@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+}
+
+group 'org.acm.auth'
+version '1.0'
+
+sourceCompatibility = 1.8
+
+repositories {
+    jcenter() // We need to use jcenter as JDA is not on Maven Central.
+}
+
+dependencies {
+    compile 'net.dv8tion:JDA:4.0.0_62' // Copied from https://bintray.com/dv8fromtheworld/maven/JDA/
+//    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
