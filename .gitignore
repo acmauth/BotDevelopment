@@ -108,4 +108,5 @@ gradle-app.setting
 hs_err_pid*
 
 ### Custom rules
-
+# Ignore all configuration files!
+*.json
