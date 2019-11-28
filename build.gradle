@@ -1,10 +1,12 @@
 plugins {
     id 'java'
+    id "com.github.johnrengelman.shadow" version "5.2.0" // We need this to compile a "fat" jar (with all dependencies)
 }
 
 group 'org.acm.auth'
 version '1.0'
 
+//noinspection GroovyUnusedAssignment
 sourceCompatibility = 1.8
 
 repositories {
@@ -13,5 +15,12 @@ repositories {
 
 dependencies {
     compile 'net.dv8tion:JDA:4.0.0_62' // Copied from https://bintray.com/dv8fromtheworld/maven/JDA/
+    compile group: 'org.json', name: 'json', version: '20190722' // https://mvnrepository.com/artifact/org.json/json
 //    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.acm.auth.App' // We need to specify where the program's "main" method is
+    }
 }
