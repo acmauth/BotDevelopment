@@ -1,6 +1,7 @@
 package org.acm.auth;
 
 import net.dv8tion.jda.api.JDABuilder;
+import org.acm.auth.cfg.Config;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
@@ -16,7 +17,7 @@ public class App {
 
         JDABuilder builder = new JDABuilder(); // Create a new builder instance
         builder.setToken(cfg.getToken()); // Provide the "password" for your bot application
-        builder.addEventListeners(new MessageReceiver()); // Register all classes that have an event method override
+        builder.addEventListeners(new CmdRegistry(cfg.getPrefix())); // Add the command registry to the event listeners
         builder.build(); // After you've configured everything, initialize the connection
 
         // Once everything is running, you can invite your bot to your server with this:

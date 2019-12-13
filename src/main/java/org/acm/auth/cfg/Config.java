@@ -1,4 +1,4 @@
-package org.acm.auth;
+package org.acm.auth.cfg;
 
 import com.sun.media.sound.InvalidFormatException;
 import org.json.JSONObject;
@@ -12,11 +12,12 @@ import java.util.List;
  * This class represents a config file, which is used to store sensitive data (bot token, database credentials, etc),
  * as well as values to allow for easy customization (prefix, developer id, etc).
  */
-class Config {
+public class Config {
     private File configFile; // An instance of the config file we'll access
     private JSONObject json; // The JSON content of the config file
+    private String[] values = { "token", "prefix" }; // All values that should be present in the config file
 
-    Config() throws IOException {
+    public Config() throws IOException {
         configFile = new File("./config.json");
         if (!configFile.exists()) {
             // The config file doesn't exist, so we'll attempt to generate it.
@@ -37,8 +38,16 @@ class Config {
      * Get the value from the JSON file that corresponds to "token".
      * @return the bot's token
      */
-    String getToken() {
+    public String getToken() {
         return json.getString("token");
+    }
+
+    /**
+     * Get the value from the JSON file that corresponds to "prefix"
+     * @return the bot's global prefix
+     */
+    public String getPrefix() {
+        return json.getString("prefix");
     }
 
     /**
@@ -52,6 +61,7 @@ class Config {
 
         JSONObject obj = new JSONObject();
         obj.put("token", ""); // Add the "token" key with an empty value for the user to fill.
+        obj.put("prefix", "?"); // Add the "prefix" key with a default value of '?'
         Files.write(configFile.toPath(), obj.toString(4).getBytes());
     }
 
@@ -60,8 +70,10 @@ class Config {
      * @throws InvalidFormatException when the config file misses a required field
      */
     private void validate() throws InvalidFormatException {
-        if (!json.has("token") || json.getString("token").isEmpty()) {
-            throw new InvalidFormatException("Missing token!");
+        for (String v : values) {
+            if (!json.has(v) || json.getString(v).isEmpty()) {
+                throw new InvalidFormatException(String.format("Missing %s!", v));
+            }
         }
     }
 }
