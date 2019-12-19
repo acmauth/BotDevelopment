@@ -3,10 +3,8 @@ package org.acm.auth;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.acm.auth.cmds.Command;
-import org.acm.auth.cmds.DiceCommand;
-import org.acm.auth.cmds.HelloCommand;
-import org.acm.auth.cmds.KickCommand;
+import org.acm.auth.cfg.Config;
+import org.acm.auth.cmds.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,11 +16,13 @@ import java.util.Map;
  * and then call the {@link Command#execute(MessageReceivedEvent, String[])} method accordingly.
  */
 public class CmdRegistry extends ListenerAdapter {
+    private Config cfg; // The bot's configuration object
     private String prefix; // The bot's global prefix
     private Map<String, Command> commands; // A map of label -> command, used to invoke the proper command
 
-    public CmdRegistry(String prefix) {
-        this.prefix = prefix;
+    public CmdRegistry(Config cfg) {
+        this.cfg = cfg;
+        this.prefix = cfg.getPrefix();
         registerCommands();
     }
 
@@ -35,6 +35,10 @@ public class CmdRegistry extends ListenerAdapter {
         commands.put("hello", new HelloCommand());
         commands.put("dice", new DiceCommand());
         commands.put("kick", new KickCommand());
+        commands.put("joke", new JokeCommand());
+        commands.put("dog", new DogCommand());
+        commands.put("urban", new UrbanCommand());
+        commands.put("youtube", new YtCommand(cfg.getYtKey()));
     }
 
     @Override
