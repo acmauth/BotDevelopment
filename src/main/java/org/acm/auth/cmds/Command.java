@@ -11,6 +11,7 @@ public abstract class Command {
     private String name;
     private String description;
     private boolean guildOnly;
+    private boolean devOnly;
     private Permission[] botPerms;
     private Permission[] usrPerms;
 
@@ -18,6 +19,16 @@ public abstract class Command {
         this.name = name;
         this.description = description;
         this.guildOnly = guildOnly;
+        this.devOnly = false;
+        this.botPerms = new Permission[]{};
+        this.usrPerms = new Permission[]{};
+    }
+
+    Command(String name, String description, boolean guildOnly, boolean devOnly) {
+        this.name = name;
+        this.description = description;
+        this.guildOnly = guildOnly;
+        this.devOnly = devOnly;
         this.botPerms = new Permission[]{};
         this.usrPerms = new Permission[]{};
     }
@@ -26,6 +37,7 @@ public abstract class Command {
         this.name = name;
         this.description = description;
         this.guildOnly = guildOnly;
+        this.devOnly = false;
         this.botPerms = botPerms;
         this.usrPerms = usrPerms;
     }
@@ -53,6 +65,15 @@ public abstract class Command {
      */
     public boolean isGuildOnly() {
         return guildOnly;
+    }
+
+    /**
+     * Returns whether this command should only be executed by the bot's developer.
+     * @return  true    if the command is exclusive to the bot's developer,
+     *          false   if the command can be used by anyone
+     */
+    public boolean isDevOnly() {
+        return devOnly;
     }
 
     /**

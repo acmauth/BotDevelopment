@@ -4,10 +4,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
 public class HttpUtil {
+    private static final Logger LOG = LogManager.getLogger();
     private static OkHttpClient client = new OkHttpClient();
 
     /**
@@ -16,6 +19,7 @@ public class HttpUtil {
      * @return a Request object for the {@link OkHttpClient} to call
      */
     private static Request buildGetRequest(String url) {
+        LOG.debug("GET request to {}", url);
         return new Request.Builder().url(url).build();
     }
 

@@ -16,6 +16,12 @@ repositories {
 dependencies {
     compile 'net.dv8tion:JDA:4.0.0_62' // Copied from https://bintray.com/dv8fromtheworld/maven/JDA/
     compile group: 'org.json', name: 'json', version: '20190722' // https://mvnrepository.com/artifact/org.json/json
+
+    // https://logging.apache.org/log4j/2.x/maven-artifacts.html#Using_Log4j_in_your_Gradle_build
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.0'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.0'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j18-impl', version: '2.13.0'
+
 //    testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 

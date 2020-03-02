@@ -1,0 +1,14 @@
+<Configuration>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout disableAnsi="false" pattern="%d{MM/dd HH:mm:ss} [%highlight{%c{1}}] %m%n"/>
+        </Console>
+        <!-- Also read up on RollingFile and other appenders for file logging -->
+        <!-- https://logging.apache.org/log4j/2.x/manual/appenders.html -->
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>

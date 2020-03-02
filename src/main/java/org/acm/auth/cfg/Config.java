@@ -15,7 +15,9 @@ import java.util.List;
 public class Config {
     private File configFile; // An instance of the config file we'll access
     private JSONObject json; // The JSON content of the config file
-    private String[] values = { "token", "prefix", "youtube_key" }; // All values that should be present in the config file
+    private String[] values = { // All values that should be present in the config file
+            "token", "prefix", "youtube_key", "dev_id"
+    };
 
     public Config() throws IOException {
         configFile = new File("./config.json");
@@ -59,6 +61,14 @@ public class Config {
     }
 
     /**
+     * Get the value from the JSON file that corresponds to "dev_id"
+     * @return the bot developer's Discord ID
+     */
+    public String getDevId() {
+        return json.getString("dev_id");
+    }
+
+    /**
      * Generate the config file with all possible fields set to their default values.
      * @throws IOException if the file could not be created
      */
@@ -71,6 +81,7 @@ public class Config {
         obj.put("token", ""); // Add the "token" key with an empty value for the user to fill.
         obj.put("prefix", "?"); // Add the "prefix" key with a default value of '?'
         obj.put("youtube_key", ""); // Add the "youtube_key" key with an empty value
+        obj.put("dev_id", ""); // Add the "dev_id" key with an empty value
         Files.write(configFile.toPath(), obj.toString(4).getBytes());
     }
 

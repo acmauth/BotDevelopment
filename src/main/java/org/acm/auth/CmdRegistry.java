@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.acm.auth.cfg.Config;
 import org.acm.auth.cmds.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,6 +18,8 @@ import java.util.Map;
  * and then call the {@link Command#execute(MessageReceivedEvent, String[])} method accordingly.
  */
 public class CmdRegistry extends ListenerAdapter {
+    public static final Logger LOG = LogManager.getLogger(); // Logger instance for the CmdRegistry class
+
     private Config cfg; // The bot's configuration object
     private String prefix; // The bot's global prefix
     private Map<String, Command> commands; // A map of label -> command, used to invoke the proper command
@@ -38,6 +42,7 @@ public class CmdRegistry extends ListenerAdapter {
         commands.put("joke", new JokeCommand());
         commands.put("dog", new DogCommand());
         commands.put("urban", new UrbanCommand());
+        commands.put("logger", new LoggerCommand());
         commands.put("youtube", new YtCommand(cfg.getYtKey()));
     }
 
@@ -80,9 +85,16 @@ public class CmdRegistry extends ListenerAdapter {
                         return;
                     }
                 }
+                // Check if command is only intended to be used by the bot developer
+                if (cmd.isDevOnly() && !event.getAuthor().getId().equals(cfg.getDevId())) {
+                    // Log suspicious activity...
+                    LOG.warn("{} tried to execute {}", event.getAuthor().getAsTag(), cmd.getName());
+                    return;
+                }
 
                 String[] input = msg.split("\\s+"); // Split the message on all space characters into an array
                 String[] args = Arrays.copyOfRange(input, 1, input.length); // Drop the first element (cmd label)
+                LOG.trace("{}: {}", event.getAuthor().getAsTag(), event.getMessage().getContentDisplay());
                 cmd.execute(event, args); // Invoke the command's execute() method and let it handle the rest!
             }
         }
