@@ -1,0 +1,14 @@
+plugins {
+    id 'java'
+}
+
+group 'org.acm.auth'
+version '1.0'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation 'net.dv8tion:JDA:4.2.0_222'
+}
