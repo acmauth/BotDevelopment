@@ -1,13 +1,17 @@
 package org.acm.auth;
 
 import net.dv8tion.jda.api.JDABuilder;
+import org.acm.auth.config.ConfigFile;
+import org.acm.auth.config.ConfigKey;
+
 import javax.security.auth.login.LoginException;
+import java.io.IOException;
 
 public class App {
-    public static void main(String[] args) throws LoginException {
-        String token = "my.token.here";
+    public static void main(String[] args) throws LoginException, IOException {
+        ConfigFile config = new ConfigFile("config.json");
         JDABuilder
-                .createDefault(token)
+                .createDefault(config.getValue(ConfigKey.TOKEN))
                 .addEventListeners(new EventClass())
                 .build();
     }
