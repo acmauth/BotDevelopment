@@ -3,6 +3,7 @@ package org.acm.auth;
 import net.dv8tion.jda.api.JDABuilder;
 import org.acm.auth.config.ConfigFile;
 import org.acm.auth.config.ConfigKey;
+import org.acm.auth.managers.CommandManager;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
@@ -12,7 +13,7 @@ public class App {
         ConfigFile config = new ConfigFile("config.json");
         JDABuilder
                 .createDefault(config.getValue(ConfigKey.TOKEN))
-                .addEventListeners(new EventClass())
+                .addEventListeners(new CommandManager(config.getValue(ConfigKey.PREFIX)))
                 .build();
     }
 }
