@@ -7,6 +7,7 @@ public enum ConfigKey {
     TOKEN("token", ""),
     PREFIX("prefix", "-"),
     DEV_ID("dev_id", ""),
+    GIPHY_KEY("giphy_key", ""),
     GOOGLE_API_KEY("google_key", "");
 
     private final String key;

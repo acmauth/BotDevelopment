@@ -13,7 +13,7 @@ public class App {
         ConfigFile config = new ConfigFile("config.json");
         JDABuilder
                 .createDefault(config.getValue(ConfigKey.TOKEN))
-                .addEventListeners(new CommandManager(config.getValue(ConfigKey.PREFIX)))
+                .addEventListeners(new CommandManager(config))
                 .build();
     }
 }

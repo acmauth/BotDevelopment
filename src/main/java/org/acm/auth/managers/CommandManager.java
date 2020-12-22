@@ -8,7 +8,10 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.acm.auth.commands.ByeCommand;
 import org.acm.auth.commands.Command;
+import org.acm.auth.commands.GifCommand;
 import org.acm.auth.commands.HiCommand;
+import org.acm.auth.config.ConfigFile;
+import org.acm.auth.config.ConfigKey;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -19,17 +22,18 @@ public class CommandManager extends ListenerAdapter  {
     private final String prefix;
     private final Map<String, Command> commands;
 
-    public CommandManager(String prefix) {
-        this.prefix = prefix;
+    public CommandManager(ConfigFile config) {
+        this.prefix = config.getValue(ConfigKey.PREFIX);
         this.commands = new HashMap<>();
-        loadCommands();
+        loadCommands(config);
     }
 
-    private void loadCommands() {
+    private void loadCommands(ConfigFile config) {
         // register all possible cmds
         Command[] cmdArr = {
                 new HiCommand(),
-                new ByeCommand()
+                new ByeCommand(),
+                new GifCommand(config.getValue(ConfigKey.GIPHY_KEY))
         };
 
         // for each command
