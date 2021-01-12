@@ -7,6 +7,7 @@ public abstract class Command {
     private final String name;              // the command's name/label
     private final String description;       // a description about what the command does
     private final boolean guildOnly;        // whether this command can only be executed in servers
+    private final boolean devOnly;          // whether this command can only be used by the developer
     private final String[] alias;           // an array with possible alternate labels that invoke the command
     private final int minArgs;              // the minimum amount of arguments required
     private final int maxArgs;              // the maximum amount of arguments allowed
@@ -21,6 +22,7 @@ public abstract class Command {
         this.name = name;
         this.description = description;
         this.guildOnly = guildOnly;
+        this.devOnly = false;               // default: cmd can be used by all users
         this.alias = alias;
         this.minArgs = 0;                   // default: no minimum args
         this.maxArgs = Integer.MAX_VALUE;   // default: infinite maximum args
@@ -29,10 +31,11 @@ public abstract class Command {
         this.usrPerms = EMPTY_PERMS;        // default: no required permissions for the user
     }
 
-    public Command(String name, String description, boolean guildOnly, String[] alias, int minArgs, int maxArgs, String usage, Permission[] botPerms, Permission[] usrPerms) {
+    public Command(String name, String description, boolean guildOnly, boolean devOnly, String[] alias, int minArgs, int maxArgs, String usage, Permission[] botPerms, Permission[] usrPerms) {
         this.name = name;
         this.description = description;
         this.guildOnly = guildOnly;
+        this.devOnly = devOnly;
         this.alias = alias;
         this.minArgs = minArgs;
         this.maxArgs = maxArgs;
@@ -53,6 +56,10 @@ public abstract class Command {
 
     public boolean isGuildOnly() {
         return guildOnly;
+    }
+
+    public boolean isDevOnly() {
+        return devOnly;
     }
 
     public String[] getAlias() {

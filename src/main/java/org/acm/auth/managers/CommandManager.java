@@ -6,12 +6,11 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.acm.auth.commands.ByeCommand;
-import org.acm.auth.commands.Command;
-import org.acm.auth.commands.GifCommand;
-import org.acm.auth.commands.HiCommand;
+import org.acm.auth.commands.*;
 import org.acm.auth.config.ConfigFile;
 import org.acm.auth.config.ConfigKey;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -19,11 +18,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommandManager extends ListenerAdapter  {
+    private static final Logger LOGGER = LogManager.getLogger(CommandManager.class);
+
     private final String prefix;
+    private final String devId;
     private final Map<String, Command> commands;
 
     public CommandManager(ConfigFile config) {
         this.prefix = config.getValue(ConfigKey.PREFIX);
+        this.devId = config.getValue(ConfigKey.DEV_ID);
         this.commands = new HashMap<>();
         loadCommands(config);
     }
@@ -33,6 +36,7 @@ public class CommandManager extends ListenerAdapter  {
         Command[] cmdArr = {
                 new HiCommand(),
                 new ByeCommand(),
+                new LoggerCommand(),
                 new GifCommand(config.getValue(ConfigKey.GIPHY_KEY))
         };
 
@@ -40,6 +44,7 @@ public class CommandManager extends ListenerAdapter  {
         for (Command cmd : cmdArr) {
             // add its label to the map
             String name = cmd.getName();
+            LOGGER.info("Loading command {}", name);
             commands.put(name, cmd);
 
             // for each of the command's alias
@@ -115,9 +120,14 @@ public class CommandManager extends ListenerAdapter  {
                 return;
             }
         }
+        if (cmd.isDevOnly() && !event.getAuthor().getId().equals(this.devId)) {
+            LOGGER.warn("{} tried to access {}", event.getAuthor().getAsTag(), cmd.getName());
+            return;
+        }
 
         // we don't need to supply the first token (which is the cmd label)
         String[] args = Arrays.copyOfRange(tokens, 1, tokens.length);
+        LOGGER.trace("Executing {} with args \"{}\"", cmd.getName(), String.join("", args));
         cmd.invoke(event, args); // execute the command!
     }
 }

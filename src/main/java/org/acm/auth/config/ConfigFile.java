@@ -1,5 +1,7 @@
 package org.acm.auth.config;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -11,6 +13,8 @@ import java.util.List;
  * Handles a configuration file.
  */
 public class ConfigFile {
+    private static final Logger LOGGER = LogManager.getLogger(ConfigFile.class);
+
     private final ConfigKey[] requiredKeys;
     private final File cfgFile;
     private JSONObject json;
@@ -27,6 +31,7 @@ public class ConfigFile {
         // bind a File object to the config file using the defined pathName
         this.cfgFile = new File(pathName);
         if (this.cfgFile.createNewFile()) {
+            LOGGER.info("Creating config file");
             // we just created the file, so let's populate it
             populateFile();
             // ask from the user to add the proper config keys to the config file
@@ -46,6 +51,7 @@ public class ConfigFile {
      * @throws IOException If an error occurs when reading the file
      */
     private void readFile() throws IOException {
+        LOGGER.info("Reading config file");
         // read the lines of the config file and save each line in a list
         List<String> lines = Files.readAllLines(cfgFile.toPath());
         // combine the elements of the list to a single String
@@ -104,6 +110,7 @@ public class ConfigFile {
         // create a JSON Object and add the required key-value pairs
         JSONObject json = new JSONObject();
         for (ConfigKey cfgKey : ConfigKey.values()) {
+            LOGGER.debug("Writing default key pair - {}: {}", cfgKey.getKey(), cfgKey.getDefaultValue());
             json.put(cfgKey.getKey(), cfgKey.getDefaultValue());
         }
         // write the key-value pairs to the config file
