@@ -1,10 +1,14 @@
 package org.acm.auth.utils;
 
 import okhttp3.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
 public class HttpUtil {
+    private static final Logger LOGGER = LogManager.getLogger(HttpUtil.class);
+
     // our instance of OkHttpClient, which will be used for ALL http requests
     private static final OkHttpClient CLIENT = new OkHttpClient();
 
@@ -16,6 +20,7 @@ public class HttpUtil {
 
     // GET a resource from the specified URL String
     public static String get(String url) {
+        LOGGER.debug("GETing {}", url);
         // build a new request with the specified URL
         Request request = new Request.Builder()
                 .url(url)

@@ -21,6 +21,8 @@ public class GifCommand extends Command {
                 "Returns a GIF using the GIPHY API.",
                 // guildOnly:
                 false,
+                // devOnly:
+                false,
                 // alias:
                 new String[]{ "giphy" },
                 // minArgs:
