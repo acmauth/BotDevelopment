@@ -10,7 +10,7 @@ version '1.0'
 mainClassName = 'org.acm.auth.App'
 
 shadowJar {
-    archiveBaseName.set('BotDev')
+    archiveBaseName.set('BotDevelopment')
     archiveClassifier.set('')
     archiveVersion.set('')
 }
