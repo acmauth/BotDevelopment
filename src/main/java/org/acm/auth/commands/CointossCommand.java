@@ -15,6 +15,6 @@ public class CointossCommand extends Command {
     @Override
     public void invoke(MessageReceivedEvent event, String[] args) {
         String coin = Math.random() > 0.5 ? "Heads!" : "Tails!";
-        event.getChannel().sendMessage("It's " + coin).submit();
+        event.getChannel().sendMessage("It's " + coin).queue();
     }
 }
