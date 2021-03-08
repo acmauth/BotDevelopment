@@ -37,7 +37,8 @@ public class CommandManager extends ListenerAdapter  {
                 new HiCommand(),
                 new ByeCommand(),
                 new LoggerCommand(),
-                new GifCommand(config.getValue(ConfigKey.GIPHY_KEY))
+                new GifCommand(config.getValue(ConfigKey.GIPHY_KEY)),
+                new CointossCommand()
         };
 
         // for each command
