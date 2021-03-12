@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import org.acm.auth.config.ConfigFile;
 import org.acm.auth.config.ConfigKey;
 import org.acm.auth.managers.CommandManager;
+import org.acm.auth.managers.ReactionManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,6 +20,7 @@ public class App {
         JDABuilder
                 .createDefault(config.getValue(ConfigKey.TOKEN))
                 .addEventListeners(new CommandManager(config))
+                .addEventListeners(new ReactionManager())
                 .build();
     }
 }
