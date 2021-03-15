@@ -19,6 +19,7 @@ public class ReactionManager extends ListenerAdapter {
         Role role = ReactionRoles.getReactionRole(event.getMessageId(), event.getReactionEmote().getEmoji());
         event.getGuild().addRoleToMember(event.getMember(), role).queue();
 
+        //sends pm to user for added role
         event.getUser().openPrivateChannel()
                 .flatMap(privateChannel -> privateChannel.sendMessage("You got role **" + role.getName() + "**"))
                 .queue();
@@ -31,6 +32,7 @@ public class ReactionManager extends ListenerAdapter {
         Role role = ReactionRoles.getReactionRole(event.getMessageId(), event.getReactionEmote().getEmoji());
         event.getGuild().removeRoleFromMember(event.getUserId(), role).queue();
 
+        //sends pm to user for removed role
         ReactionRoles.getUser(event.getUserId()).openPrivateChannel()
                 .flatMap(privateChannel -> privateChannel.sendMessage("You removed role **" + role.getName() + "**"))
                 .queue();

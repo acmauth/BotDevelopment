@@ -2,11 +2,9 @@ package org.acm.auth.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import org.acm.auth.utils.ReactionRoles;
 
 import java.time.Duration;
@@ -15,7 +13,7 @@ public class ReactionRolesCommand extends Command {
     private static final Permission[] EMPTY_PERMS = {};
 
     public ReactionRolesCommand() {
-        super("rr", "Creates a message for giving roles to users", false, false, new String[]{}, 1, 3, "", EMPTY_PERMS, EMPTY_PERMS);
+        super("rr", "Adds emoji to a msg for giving a role to users", false, false, new String[]{}, 1, 3, "", EMPTY_PERMS, EMPTY_PERMS);
     }
 
     @Override
@@ -26,7 +24,7 @@ public class ReactionRolesCommand extends Command {
 
         String messageId = args[0];
         if (messageId.equals("help")) {
-            postHelp(event);
+            showHelpMsg(event);
             return;
         }
 
@@ -49,7 +47,7 @@ public class ReactionRolesCommand extends Command {
 
     }
 
-    private void postHelp(MessageReceivedEvent event) {
+    private void showHelpMsg(MessageReceivedEvent event) {
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setTitle("Reaction Roles Help")
                 .addField("Command options",
