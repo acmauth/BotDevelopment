@@ -3,9 +3,13 @@ package org.acm.auth.commands;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import org.acm.auth.utils.ReactionRoles;
+
+import java.time.Duration;
 
 public class ReactionRolesCommand extends Command {
     private static final Permission[] EMPTY_PERMS = {};
@@ -16,7 +20,10 @@ public class ReactionRolesCommand extends Command {
 
     @Override
     public void invoke(MessageReceivedEvent event, String[] args) {
-        //-rr $msg-id <role> <reaction>
+        //-rr help
+        //or
+        //-rr <msg-id> <role> <reaction>
+
         String messageId = args[0];
         if (messageId.equals("help")) {
             postHelp(event);
@@ -28,12 +35,26 @@ public class ReactionRolesCommand extends Command {
 
         ReactionRoles.addReactionRole(messageId, emojiId, role);
         event.getChannel().addReactionById(messageId, emojiId).queue();
+        event.getMessage().delete().queue();  //delete command message
+
+        //send ok message and deletes it after while
+        event.getChannel()
+                .sendMessage(new EmbedBuilder()
+                        .setDescription("Reaction Role **" + role.getName() + "** -> " + emojiId + " created.")
+                        .build())
+                .delay(Duration.ofSeconds(5))
+                .flatMap(Message::delete)
+                .queue();
+
+
     }
 
     private void postHelp(MessageReceivedEvent event) {
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setTitle("Reaction Roles Help")
-                .addField("command format", "-rr <message-id> <role-id> <emoji-unicode>", false);
+                .addField("Command options",
+                        "`-rr <message-id> <role-id> <emoji-unicode>` : add reaction role to msg\n" + "`-rr help` : print help",
+                        false);
         event.getChannel().sendMessage(embedBuilder.build()).queue();
     }
 }

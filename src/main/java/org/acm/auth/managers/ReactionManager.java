@@ -1,10 +1,10 @@
 package org.acm.auth.managers;
 
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.channel.priv.PrivateChannelCreateEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.acm.auth.utils.ReactionRoles;
 import org.jetbrains.annotations.NotNull;
@@ -22,14 +22,16 @@ public class ReactionManager extends ListenerAdapter {
         event.getUser().openPrivateChannel()
                 .flatMap(privateChannel -> privateChannel.sendMessage("You got role **" + role.getName() + "**"))
                 .queue();
+
+        ReactionRoles.addUser(event.getUserId(), event.getUser());
     }
 
     @Override
-    public void onGuildMessageReactionRemove(@NotNull GuildMessageReactionRemoveEvent event) {
+    public void onMessageReactionRemove(@NotNull MessageReactionRemoveEvent event) {
         Role role = ReactionRoles.getReactionRole(event.getMessageId(), event.getReactionEmote().getEmoji());
-        event.getGuild().removeRoleFromMember(event.getMember(), role).queue();
+        event.getGuild().removeRoleFromMember(event.getUserId(), role).queue();
 
-        event.getUser().openPrivateChannel()
+        ReactionRoles.getUser(event.getUserId()).openPrivateChannel()
                 .flatMap(privateChannel -> privateChannel.sendMessage("You removed role **" + role.getName() + "**"))
                 .queue();
     }
