@@ -1,20 +1,15 @@
 package org.acm.auth.utils;
 
-import net.dv8tion.jda.api.entities.Emote;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 
 import java.util.HashMap;
 
 public class ReactionRoles {
-    public static HashMap<String, HashMap<String, Role>> roles = new HashMap<>();
-    public static HashMap<String, User> users = new HashMap<>();
+    private static HashMap<String, HashMap<String, Role>> roles = new HashMap<>();
+    private static HashMap<String, User> users = new HashMap<>();
 
-    public ReactionRoles() {}
-
-    public static void addReactionRole(String msg, String emoji, Role  role) {
+    public static boolean addReactionRole(String msg, String emoji, Role  role) {
         HashMap<String, Role> map;
         if (!roles.containsKey(msg)) {
             map = new HashMap<>();
@@ -22,8 +17,15 @@ public class ReactionRoles {
             map = roles.get(msg);
         }
 
+        //prevents from assigning 2nd emoji to a role on the same message
+        if (roles.containsKey(msg) && roles.get(msg).containsValue(role)) {
+            return false;
+        }
+
         map.put(emoji, role);
         roles.put(msg, map);
+
+        return true;
     }
 
     public static Role getReactionRole(String msg, String emoji) {

@@ -12,8 +12,12 @@ import java.time.Duration;
 public class ReactionRolesCommand extends Command {
     private static final Permission[] EMPTY_PERMS = {};
 
-    public ReactionRolesCommand() {
+    private final String prefix;
+
+    public ReactionRolesCommand(String prefix) {
         super("rr", "Adds emoji to a msg for giving a role to users", false, false, new String[]{}, 1, 3, "", EMPTY_PERMS, EMPTY_PERMS);
+
+        this.prefix = prefix;
     }
 
     @Override
@@ -31,19 +35,14 @@ public class ReactionRolesCommand extends Command {
         Role role = event.getGuild().getRoleById(args[1]);
         String emojiId = args[2];
 
-        ReactionRoles.addReactionRole(messageId, emojiId, role);
-        event.getChannel().addReactionById(messageId, emojiId).queue();
-        event.getMessage().delete().queue();  //delete command message
-
-        //send ok message and deletes it after while
-        event.getChannel()
-                .sendMessage(new EmbedBuilder()
-                        .setDescription("Reaction Role **" + role.getName() + "** -> " + emojiId + " created.")
-                        .build())
-                .delay(Duration.ofSeconds(5))
-                .flatMap(Message::delete)
-                .queue();
-
+        if (ReactionRoles.addReactionRole(messageId, emojiId, role)) {
+            event.getChannel().addReactionById(messageId, emojiId).queue();
+            event.getMessage().delete().queue();  //delete command message
+            showOkMsg(event, role, emojiId);
+        } else {
+            event.getMessage().delete().queue();  //delete command message
+            showErrorMsg(event, role, emojiId);
+        }
 
     }
 
@@ -51,8 +50,31 @@ public class ReactionRolesCommand extends Command {
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setTitle("Reaction Roles Help")
                 .addField("Command options",
-                        "`-rr <message-id> <role-id> <emoji-unicode>` : add reaction role to msg\n" + "`-rr help` : print help",
+                        "`" + prefix + this.getName() + " <message-id> <role-id> <emoji-unicode>` : add reaction role to msg\n"
+                                + "`" + prefix + this.getName() + " help` : print help",
                         false);
         event.getChannel().sendMessage(embedBuilder.build()).queue();
+    }
+
+    private void showOkMsg(MessageReceivedEvent event, Role role, String emojiId) {
+        //send ok message and deletes it after while
+        event.getChannel()
+                .sendMessage(new EmbedBuilder()
+                        .setDescription("Reaction Role **" + role.getName() + "** -> " + emojiId + " created.")
+                        .build())
+                .delay(Duration.ofSeconds(10))
+                .flatMap(Message::delete)
+                .queue();
+    }
+
+    private void showErrorMsg(MessageReceivedEvent event, Role role, String emojiId) {
+        //send error message and deletes it after while
+        event.getChannel()
+                .sendMessage(new EmbedBuilder()
+                        .setDescription("Reaction Role **" + role.getName() + "** already exists. (**" + role.getName() + "** -> " + emojiId + ")")
+                        .build())
+                .delay(Duration.ofSeconds(10))
+                .flatMap(Message::delete)
+                .queue();
     }
 }

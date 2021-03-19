@@ -39,7 +39,7 @@ public class CommandManager extends ListenerAdapter  {
                 new LoggerCommand(),
                 new GifCommand(config.getValue(ConfigKey.GIPHY_KEY)),
                 new CointossCommand(),
-                new ReactionRolesCommand()
+                new ReactionRolesCommand(config.getValue(ConfigKey.PREFIX))
         };
 
         // for each command
