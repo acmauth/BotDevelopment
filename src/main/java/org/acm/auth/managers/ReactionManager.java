@@ -23,8 +23,6 @@ public class ReactionManager extends ListenerAdapter {
         event.getUser().openPrivateChannel()
                 .flatMap(privateChannel -> privateChannel.sendMessage("You got role **" + role.getName() + "**"))
                 .queue();
-
-        ReactionRoles.addUser(event.getUserId(), event.getUser());
     }
 
     @Override
@@ -33,7 +31,7 @@ public class ReactionManager extends ListenerAdapter {
         event.getGuild().removeRoleFromMember(event.getUserId(), role).queue();
 
         //sends pm to user for removed role
-        ReactionRoles.getUser(event.getUserId()).openPrivateChannel()
+        event.getJDA().openPrivateChannelById(event.getUserId())
                 .flatMap(privateChannel -> privateChannel.sendMessage("You removed role **" + role.getName() + "**"))
                 .queue();
     }

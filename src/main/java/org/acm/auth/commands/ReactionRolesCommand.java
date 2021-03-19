@@ -15,7 +15,7 @@ public class ReactionRolesCommand extends Command {
     private final String prefix;
 
     public ReactionRolesCommand(String prefix) {
-        super("rr", "Adds emoji to a msg for giving a role to users", false, false, new String[]{}, 1, 3, "", EMPTY_PERMS, EMPTY_PERMS);
+        super("rr", "Adds emoji to a msg for giving a role to users", false, false, new String[]{"reactionrole", "reactionroles"}, 1, 3, "", EMPTY_PERMS, EMPTY_PERMS);
 
         this.prefix = prefix;
     }
@@ -27,21 +27,21 @@ public class ReactionRolesCommand extends Command {
         //-rr <msg-id> <role> <reaction>
 
         String messageId = args[0];
-        if (messageId.equals("help")) {
+        if (messageId.equalsIgnoreCase("help")) {
             showHelpMsg(event);
             return;
         }
 
         Role role = event.getGuild().getRoleById(args[1]);
-        String emojiId = args[2];
+        String emojiUnicode = args[2];
 
-        if (ReactionRoles.addReactionRole(messageId, emojiId, role)) {
-            event.getChannel().addReactionById(messageId, emojiId).queue();
+        if (ReactionRoles.addReactionRole(messageId, emojiUnicode, role)) {
+            event.getChannel().addReactionById(messageId, emojiUnicode).queue();
             event.getMessage().delete().queue();  //delete command message
-            showOkMsg(event, role, emojiId);
+            showOkMsg(event, role, emojiUnicode);
         } else {
             event.getMessage().delete().queue();  //delete command message
-            showErrorMsg(event, role, emojiId);
+            showErrorMsg(event, role, emojiUnicode);
         }
 
     }
