@@ -1,6 +1,8 @@
 plugins {
     id 'application'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id "co.uzzu.dotenv.gradle" version "1.1.0"
+    id 'nu.studer.jooq' version '5.2'
     id 'java'
 }
 
@@ -33,4 +35,43 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl
     compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.14.0'
+
+    // https://mvnrepository.com/artifact/io.github.cdimascio/java-dotenv
+    implementation group: 'io.github.cdimascio', name: 'java-dotenv', version: '5.2.2'
+
+    // https://mvnrepository.com/artifact/org.jooq/jooq
+    implementation group: 'org.jooq', name: 'jooq', version: '3.14.8'
+
+    // https://mvnrepository.com/artifact/org.jooq/jooq-meta
+    implementation group: 'org.jooq', name: 'jooq-meta', version: '3.14.8'
+
+    // https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
+    implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.2'
+    jooqGenerator group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.2'
+}
+
+jooq {
+    configurations {
+        main {
+            generationTool {
+                logging = org.jooq.meta.jaxb.Logging.WARN
+                jdbc {
+                    driver = 'org.mariadb.jdbc.Driver'
+                    url = "jdbc:mariadb://localhost:3306"
+                    user = "${env.MYSQL_USER.value}"
+                    password = "${env.MYSQL_PASSWORD.value}"
+                }
+                generator {
+                    database {
+                        name = 'org.jooq.meta.mariadb.MariaDBDatabase'
+                        inputSchema = "${env.MYSQL_DATABASE.value}"
+                    }
+                    target {
+                        packageName = 'org.acm.auth.db'
+                        directory = 'src/jooq'
+                    }
+                }
+            }
+        }
+    }
 }
