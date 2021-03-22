@@ -38,8 +38,8 @@ public class CommandManager extends ListenerAdapter  {
                 new ByeCommand(),
                 new LoggerCommand(),
                 new GifCommand(config.getValue(ConfigKey.GIPHY_KEY)),
-                new PollCommand()
-                new CointossCommand()
+                new PollCommand(),
+                new CointossCommand(),
         };
 
         // for each command
