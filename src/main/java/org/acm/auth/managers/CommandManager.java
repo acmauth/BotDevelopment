@@ -74,14 +74,14 @@ public class CommandManager extends ListenerAdapter  {
             return;
         }
 
-        String message = event.getMessage().getContentRaw().toLowerCase();
-        if (!message.startsWith(prefix)) {
+        String message = event.getMessage().getContentRaw();
+        if (!message.toLowerCase().startsWith(prefix)) {
             // message doesn't start with our prefix - ignore
             return;
         }
 
         String[] tokens = message.split("\\s+"); // split on any space char (whitespace, tab, newlines)
-        String label = tokens[0].substring(prefix.length()); // the label is the first token if we remove the prefix
+        String label = tokens[0].substring(prefix.length()).toLowerCase(); // the label is the first token if we remove the prefix
         Command cmd = commands.get(label); // find the corresponding command in the map
 
         if (cmd == null) {
