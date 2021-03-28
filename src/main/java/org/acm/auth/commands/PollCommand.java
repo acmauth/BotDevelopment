@@ -10,42 +10,45 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PollCommand extends Command{
+public class PollCommand extends Command {
 
-    // static object for empty perms to be used in the default constructor
-    private static final Permission[] NO_PERMS = {};
+    // static objects for permissions to be used in the default constructor
     private static final Permission[] BOT_PERMS = {Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_MANAGE};
+    private static final Permission[] USER_PERMS = {};
 
     public PollCommand() {
         super(
                 "poll",
                 "Creates a poll",
-                true,
-                false,
-                new String[] {"vote"},
+                true, // guildOnly
+                false, // devOnly
+                new String[]{"vote"},
                 3,
                 20, // Maximum Number of Reactions is 20, and it is kinda overkill to have more than 20 options
                 "\"Question\" \"Option1\" \"Option2\" ... \"OptionN\"",
                 BOT_PERMS,
-                NO_PERMS
+                USER_PERMS
         );
     }
 
     @Override
-    public void invoke(MessageReceivedEvent event, String[] msg_args) {
-        String argsString = String.join(" ", msg_args);
-        System.out.println(argsString);
+    public void invoke(MessageReceivedEvent event, String[] msgArgs) {
+        String argsString = String.join(" ", msgArgs);
         Pattern p = Pattern.compile("\"([^\"]+)\"");
         Matcher m = p.matcher(argsString);
-        ArrayList<String> args = new ArrayList<String>();
+
+        ArrayList<String> args = new ArrayList<>();
         while (m.find()) {
-            String tempArg = m.group();
-            args.add(tempArg.substring(1, tempArg.length() - 1));
+            // use the first capture group (text between quotes)
+            args.add(m.group(1));
         }
 
+        if (args.size() < 3) {
+            event.getChannel().sendMessage("Insufficient arguments!").queue();
+            return;
+        }
 
         String question = args.get(0);
-        String options = "";
 
         // Create the EmbedBuilder instance
         EmbedBuilder eb = new EmbedBuilder();
@@ -56,11 +59,10 @@ public class PollCommand extends Command{
         // REGIONAL_INDICATORS[i-1] since we start the loop from 1 and not 0
         StringBuilder sb = new StringBuilder();
         for (int i = 1; i < args.size(); i++) {
-            sb.append(Emoji.REGIONAL_INDICATORS[i-1]).append("\t").append(args.get(i)).append("\n").toString();
+            sb.append(Emoji.REGIONAL_INDICATORS[i - 1]).append("\t").append(args.get(i)).append("\n");
         }
-        options = sb.toString();
 
-        eb.setDescription(options);
+        eb.setDescription(sb.toString());
 
         // Delete the message that asked for the poll
         event.getMessage().delete().queue();
@@ -72,7 +74,5 @@ public class PollCommand extends Command{
                 message.addReaction(Emoji.REGIONAL_INDICATORS[i]).queue();
             }
         });
-
-
     }
 }
