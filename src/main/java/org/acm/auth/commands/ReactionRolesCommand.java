@@ -10,12 +10,30 @@ import org.acm.auth.utils.ReactionRoles;
 import java.time.Duration;
 
 public class ReactionRolesCommand extends Command {
-    private static final Permission[] EMPTY_PERMS = {};
+    private static final Permission[] BOT_PERMS = {
+            Permission.MESSAGE_EMBED_LINKS,
+            Permission.MESSAGE_MANAGE,
+            Permission.MESSAGE_ADD_REACTION
+    };
+
+    private static final Permission[] USER_PERMS = {
+            Permission.MANAGE_ROLES
+    };
 
     private final String prefix;
 
     public ReactionRolesCommand(String prefix) {
-        super("rr", "Adds emoji to a msg for giving a role to users", false, false, new String[]{"reactionrole", "reactionroles"}, 1, 3, "", EMPTY_PERMS, EMPTY_PERMS);
+        super(
+                "rr",
+                "Adds emoji to a msg for giving a role to users",
+                false,
+                false,
+                new String[]{"reactionrole", "reactionroles"},
+                1,
+                3,
+                "",
+                BOT_PERMS,
+                USER_PERMS);
 
         this.prefix = prefix;
     }
