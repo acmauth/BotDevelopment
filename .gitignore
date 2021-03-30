@@ -109,3 +109,7 @@ fabric.properties
 
 # Custom config files
 *.json
+.env
+
+# jOOQ generated files
+src/jooq/*
