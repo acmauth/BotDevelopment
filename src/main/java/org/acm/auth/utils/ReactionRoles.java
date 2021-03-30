@@ -1,15 +1,12 @@
 package org.acm.auth.utils;
 
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.User;
-
 import java.util.HashMap;
 
 public class ReactionRoles {
-    private static HashMap<String, HashMap<String, Role>> roles = new HashMap<>();
+    private static HashMap<String, HashMap<String, String>> roles = new HashMap<>();
 
-    public static boolean addReactionRole(String msg, String emoji, Role  role) {
-        HashMap<String, Role> map;
+    public static AddRRstatus addReactionRole(String msg, String emoji, String  role) {
+        HashMap<String, String> map;
         if (!roles.containsKey(msg)) {
             map = new HashMap<>();
         } else {
@@ -18,17 +15,43 @@ public class ReactionRoles {
 
         //prevents from assigning 2nd emoji to a role on the same message
         if (roles.containsKey(msg) && roles.get(msg).containsValue(role)) {
-            return false;
+            return AddRRstatus.ROLE_EXISTS;
+        } else if (roles.containsKey(msg) && roles.get(msg).containsKey(emoji)) {
+            return AddRRstatus.REACTION_EXISTS;
         }
 
         map.put(emoji, role);
         roles.put(msg, map);
 
-        return true;
+        return AddRRstatus.OK;
     }
 
-    public static Role getReactionRole(String msg, String emoji) {
+    public static String getReactionRole(String msg, String emoji) {
+        if (!roles.containsKey(msg)) {
+            return null;
+        }
+
         return roles.get(msg).get(emoji);
+    }
+
+    public static String getEmojiUnicode(String msg, String roleId) {
+        for (String emoji : roles.get(msg).keySet()) {
+            if (roleId.equals(roles.get(msg).get(emoji)))
+                return emoji;
+        }
+
+        return null;
+    }
+
+    public static boolean msgExists(String msg) {
+        return roles.containsKey(msg);
+    }
+
+    public enum AddRRstatus {
+        OK,
+        ROLE_EXISTS,
+        REACTION_EXISTS,
+        ERROR
     }
 
 //    private static
