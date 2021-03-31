@@ -38,7 +38,8 @@ public class CommandManager extends ListenerAdapter  {
                 new ByeCommand(),
                 new LoggerCommand(),
                 new GifCommand(config.getValue(ConfigKey.GIPHY_KEY)),
-                new CointossCommand()
+                new PollCommand(),
+                new CointossCommand(),
         };
 
         // for each command
@@ -59,10 +60,10 @@ public class CommandManager extends ListenerAdapter  {
     private boolean isMissingPerms(Member member, Permission[] permissions, TextChannel tc) {
         return !Arrays.stream(permissions)
                 .allMatch(p -> { // check if the following condition is TRUE for ALL items in the array
-                    return p.isGuild()                      // is the permission a guild-level one?
-                            ? member.hasPermission(p)       // if so (e.g. BAN_MEMBERS), does the user have it globally?
-                            : member.hasPermission(tc, p);  // if not (e.g. MANAGE_MESSAGES), does the user have it in
-                                                            //                                this exact text channel?
+                    return p.isChannel()                    // is the permission a channel-level one?
+                            ? member.hasPermission(tc, p)   // if so (e.g. MANAGE_MESSAGES), does the user have it in
+                                                            //                               this exact text channel?
+                            : member.hasPermission(p);      // if not (e.g. BAN_MEMBERS), does the user have it globally?
                 });
     }
 
@@ -73,14 +74,14 @@ public class CommandManager extends ListenerAdapter  {
             return;
         }
 
-        String message = event.getMessage().getContentRaw().toLowerCase();
-        if (!message.startsWith(prefix)) {
+        String message = event.getMessage().getContentRaw();
+        if (!message.toLowerCase().startsWith(prefix)) {
             // message doesn't start with our prefix - ignore
             return;
         }
 
         String[] tokens = message.split("\\s+"); // split on any space char (whitespace, tab, newlines)
-        String label = tokens[0].substring(prefix.length()); // the label is the first token if we remove the prefix
+        String label = tokens[0].substring(prefix.length()).toLowerCase(); // the label is the first token if we remove the prefix
         Command cmd = commands.get(label); // find the corresponding command in the map
 
         if (cmd == null) {
