@@ -15,7 +15,7 @@ public class App {
         // prefix values stored in the config file
         ConfigFile configFile = new ConfigFile("config.json");
         JDA jda = JDABuilder.createDefault(configFile.getValue(ConfigKey.TOKEN))
-                .addEventListeners(new CommandManager(configFile.getValue(ConfigKey.PREFIX)))
+                .addEventListeners(new CommandManager(configFile))
                 .build();
 
         jda.awaitReady();

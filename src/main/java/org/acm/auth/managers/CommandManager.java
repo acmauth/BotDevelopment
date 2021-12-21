@@ -8,7 +8,10 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.acm.auth.commands.ByeCommand;
 import org.acm.auth.commands.Command;
+import org.acm.auth.commands.GifCommand;
 import org.acm.auth.commands.HiCommand;
+import org.acm.auth.config.ConfigFile;
+import org.acm.auth.config.ConfigKey;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -24,22 +27,23 @@ public class CommandManager extends ListenerAdapter {
 
     /**
      * Constructs a command manager with the specified prefix
-     * @param prefix the prefix of choice for the supported commands as {@link String}
+     * @param configFile the config file for the supported commands as {@link ConfigFile}
      */
-    public CommandManager(String prefix) {
-        this.prefix = prefix;
+    public CommandManager(ConfigFile configFile) {
+        this.prefix = configFile.getValue(ConfigKey.PREFIX);
         this.commands = new HashMap<>();
-        loadCommands();
+        loadCommands(configFile);
     }
 
     /**
      * Registers all possible commands the bot supports
      */
-    private void loadCommands() {
+    private void loadCommands(ConfigFile configFile) {
         // register all commands
         Command[] commandsArray = {
                 new HiCommand(),
-                new ByeCommand()
+                new ByeCommand(),
+                new GifCommand(configFile.getValue(ConfigKey.GIPHY_TOKEN))
         };
 
 

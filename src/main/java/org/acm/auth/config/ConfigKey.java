@@ -6,7 +6,8 @@ package org.acm.auth.config;
 public enum ConfigKey {
     TOKEN("token", ""),
     GITHUBTOKEN("github_token", ""),
-    PREFIX("prefix", "-");
+    PREFIX("prefix", "-"),
+    GIPHY_TOKEN("giphy_token", "");
 
     private final String key;
     private final String defaultValue;

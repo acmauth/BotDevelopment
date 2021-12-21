@@ -18,7 +18,7 @@ public abstract class Command {
     private final Permission[] usrPerms;
 
     // static array for empty permissions to be used in the default constructor
-    private static final Permission[] EMPTY_PERMS = {};
+    protected static final Permission[] EMPTY_PERMS = {};
 
     /**
      * Constructs a command with default values for minimum arguments, maximum arguments, usage, bot and user

@@ -23,7 +23,7 @@ public class ConfigFile {
     public ConfigFile(String pathName) throws IOException {
         // set the required keys that we need from the config file
         // if one of those keys is missing then the bot can't start
-        this.requiredKeys = new ConfigKey[] { ConfigKey.TOKEN };
+        this.requiredKeys = new ConfigKey[] { ConfigKey.TOKEN, ConfigKey.GIPHY_TOKEN };
         // bind a File object to the config file using the defined pathName
         this.cfgFile = new File(pathName);
         if (this.cfgFile.createNewFile()) {
