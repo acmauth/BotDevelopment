@@ -14,6 +14,7 @@ public class GifCommand extends Command {
         super(  "gif", // name
                 "Returns a GIF using GIPHY API", // description
                 false, // guildOnly
+                false, // devOnly
                 new String[] { "giphy" }, // alias
                 0, // minArgs
                 Integer.MAX_VALUE, // maxArgs

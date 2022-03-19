@@ -1,9 +1,19 @@
 plugins {
+    id 'application'
+    id "com.github.johnrengelman.shadow" version "7.1.2"
     id 'java'
 }
 
 group 'org.acm.auth'
 version '1.0'
+
+mainClassName = 'org.acm.auth/App'
+
+shadowJar {
+    archiveBaseName.set('BotDev')
+    archiveClassifier.set('')
+    archiveBaseName.set('')
+}
 
 repositories {
     mavenCentral()
@@ -17,4 +27,13 @@ dependencies {
     implementation("net.dv8tion:JDA:4.3.0_348")
     // https://mvnrepository.com/artifact/org.json/json
     implementation group: 'org.json', name: 'json', version: '20210307'
+
+    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.1'
+
+    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.17.1'
+
+    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.1'
 }

@@ -7,7 +7,8 @@ public enum ConfigKey {
     TOKEN("token", ""),
     GITHUBTOKEN("github_token", ""),
     PREFIX("prefix", "-"),
-    GIPHY_TOKEN("giphy_token", "");
+    GIPHY_TOKEN("giphy_token", ""),
+    DEV_ID("dev_id", "");
 
     private final String key;
     private final String defaultValue;

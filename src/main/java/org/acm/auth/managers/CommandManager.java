@@ -6,12 +6,12 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.acm.auth.commands.ByeCommand;
-import org.acm.auth.commands.Command;
-import org.acm.auth.commands.GifCommand;
-import org.acm.auth.commands.HiCommand;
+import org.acm.auth.commands.*;
 import org.acm.auth.config.ConfigFile;
 import org.acm.auth.config.ConfigKey;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -22,7 +22,10 @@ import java.util.Map;
  * Represents a command manager that acts as a command registry as well as an authorization service.
  */
 public class CommandManager extends ListenerAdapter {
+    private static final Logger LOGGER = LogManager.getLogger(CommandManager.class);
+
     private final String prefix;
+    private final String devId;
     private final Map<String, Command> commands;
 
     /**
@@ -31,6 +34,7 @@ public class CommandManager extends ListenerAdapter {
      */
     public CommandManager(ConfigFile configFile) {
         this.prefix = configFile.getValue(ConfigKey.PREFIX);
+        this.devId = configFile.getValue(ConfigKey.DEV_ID);
         this.commands = new HashMap<>();
         loadCommands(configFile);
     }
@@ -43,13 +47,15 @@ public class CommandManager extends ListenerAdapter {
         Command[] commandsArray = {
                 new HiCommand(),
                 new ByeCommand(),
-                new GifCommand(configFile.getValue(ConfigKey.GIPHY_TOKEN))
+                new GifCommand(configFile.getValue(ConfigKey.GIPHY_TOKEN)),
+                new LoggerCommand(),
         };
 
 
         for (Command command : commandsArray) {
             // add the label for each command and its aliases to the map
             String name = command.getName();
+            LOGGER.info("Loading command {}", name);
             commands.put(name, command);
 
             for (String alias : command.getAlias()) {
@@ -108,8 +114,14 @@ public class CommandManager extends ListenerAdapter {
         if(!authorizedPermissions(event, command, channel))
             return;
 
+        if(command.isDevOnly() && !event.getAuthor().getId().equals(this.devId)) {
+            LOGGER.warn("{} tried to access {}", event.getAuthor().getAsTag(), command.getName());
+            return;
+        }
+
         // correct amount of arguments and authorized permissions, invoke the command
         String[] args = Arrays.copyOfRange(tokens, 1, tokens.length);
+        LOGGER.trace("Executing {} with args with \"{}\"", command.getName(), String.join("", args));
         command.invoke(event, args);
     }
 

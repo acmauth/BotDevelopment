@@ -10,6 +10,7 @@ public abstract class Command {
     private final String name;
     private final String description;
     private final boolean guildOnly;
+    private final boolean devOnly;
     private final String[] alias;
     private final int minArgs;
     private final int maxArgs;
@@ -32,6 +33,7 @@ public abstract class Command {
         this.name = name;
         this.description = description;
         this.guildOnly = guildOnly;
+        this.devOnly = false;               // default: commands can be used by all users
         this.alias = alias;
         this.minArgs = 0;                   // no minimum args
         this.maxArgs = Integer.MAX_VALUE;   // maximum number of possible supported arguments
@@ -52,10 +54,11 @@ public abstract class Command {
      * @param botPerms array of {@link Permission} objects representing the required permissions the bot has to have
      * @param usrPerms array of {@link Permission} objects representing the required permissions the user has to have
      */
-    public Command(String name, String description, boolean guildOnly, String[] alias, int minArgs, int maxArgs, String usage, Permission[] botPerms, Permission[] usrPerms) {
+    public Command(String name, String description, boolean guildOnly, boolean devOnly, String[] alias, int minArgs, int maxArgs, String usage, Permission[] botPerms, Permission[] usrPerms) {
         this.name = name;
         this.description = description;
         this.guildOnly = guildOnly;
+        this.devOnly = devOnly;
         this.alias = alias;
         this.minArgs = minArgs;
         this.maxArgs = maxArgs;
@@ -93,6 +96,10 @@ public abstract class Command {
      */
     public boolean isGuildOnly() {
         return guildOnly;
+    }
+
+    public boolean isDevOnly() {
+        return devOnly;
     }
 
     /**
