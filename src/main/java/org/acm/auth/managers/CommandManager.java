@@ -49,6 +49,7 @@ public class CommandManager extends ListenerAdapter {
                 new ByeCommand(),
                 new GifCommand(configFile.getValue(ConfigKey.GIPHY_TOKEN)),
                 new LoggerCommand(),
+                new SubmitFunctionCommand(),
         };
 
 
