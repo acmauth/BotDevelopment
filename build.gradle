@@ -39,4 +39,10 @@ dependencies {
 
     // https://www.mongodb.com/docs/drivers/java/sync/current/quick-start/
     implementation 'org.mongodb:mongodb-driver-sync:4.5.1'
+
+    // https://mvnrepository.com/artifact/io.github.cdimascio/java-dotenv
+    implementation 'io.github.cdimascio:java-dotenv:5.2.2'
+
+    // https://mvnrepository.com/artifact/com.vdurmont/emoji-java
+    implementation 'com.vdurmont:emoji-java:5.1.1'
 }

@@ -1,0 +1,9 @@
+version: '3.9'
+services:
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    volumes:
+      - /mongodb-data:/data/db
+    ports:
+      - "27017:27017"

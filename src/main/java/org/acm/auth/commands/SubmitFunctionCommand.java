@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 public class SubmitFunctionCommand extends Command{
 
     //because Hardcoding is a good practice
-    String SUBMITIONS_CHANNEL = "963910999751147580";
+    String SUBMISSIONS_CHANNEL = "963910999751147580";
     String DOC_ID = "955908180121100330";
     String DIVIDER_ID = "963912283061375056";
 
@@ -79,7 +79,7 @@ public class SubmitFunctionCommand extends Command{
                 .append(content).append("\n")
                 .append(attatchment);
 
-        event.getGuild().getTextChannelById(SUBMITIONS_CHANNEL).sendMessage(relay).queue();
+        event.getGuild().getTextChannelById(SUBMISSIONS_CHANNEL).sendMessage(relay).queue();
 
     }
 
