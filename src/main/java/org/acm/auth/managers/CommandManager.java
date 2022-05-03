@@ -50,6 +50,9 @@ public class CommandManager extends ListenerAdapter {
                 new GifCommand(configFile.getValue(ConfigKey.GIPHY_TOKEN)),
                 new LoggerCommand(),
                 new SubmitFunctionCommand(),
+                new UpdateTeamRankingCommand(),
+                new CreateTeamCommand(),
+                new ShowRankingsCommand()
         };
 
 
