@@ -2,12 +2,16 @@ package org.acm.auth.commands;
 
 import com.mongodb.client.MongoClient;
 import io.github.cdimascio.dotenv.Dotenv;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.acm.auth.util.DatabaseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bson.Document;
 
+import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -73,10 +77,19 @@ public class CreateTeamCommand extends Command {
         }
 
         var players = new java.util.ArrayList<>(List.of(new Document("name", args[2]).append("discordId", args[3])));
+
+        var discordMembers = new ArrayList<Member>();   //List of discord member objects
+        discordMembers.add(event.getGuild().retrieveMemberById(args[3]).complete());
+        LOGGER.info(args[3] + " " + discordMembers.get(0));
+
         for(int i=4;i<args.length-1;i+=2) {
             players.add(new Document("name", args[i]).append("discordId", args[i+1]));
+            discordMembers.add(event.getGuild().retrieveMemberById(args[i+1]).complete());
         }
 
+        /*
+         * Add the team to the database
+         */
         var newTeam = new Document("code", args[0]).append("name", args[1]).append("ranking", 0).append("players", players);
         try {
             LOGGER.info("Executing insertion for document with code: " + args[0] + " team name: " + args[1]);
@@ -86,6 +99,30 @@ public class CreateTeamCommand extends Command {
             event.getMessage().reply("Cannot save a new team right now! Please try again in a couple of seconds.").queue();
             return;
         }
+
+        /*
+         * Create a team channel, add its members and assign the correct roles.
+         */
+        try {
+            var channel = event.getMessage().getCategory().createTextChannel(args[1]);
+            channel.addPermissionOverride(event.getGuild().getPublicRole(), null, EnumSet.of(Permission.VIEW_CHANNEL));
+            channel.setTopic(args[0]);
+
+            var docRole = event.getGuild().getRoleById(Dotenv.load().get("PARTICIPANT_ROLE_ID"));
+
+            for (Member member: discordMembers){
+                channel.addPermissionOverride(member, EnumSet.of(Permission.VIEW_CHANNEL, Permission.MESSAGE_WRITE), null);
+                if (docRole!=null) {
+                    event.getGuild().addRoleToMember(member, docRole).queue();
+                }
+            }
+            channel.queue();
+        }
+        catch (Exception e){
+            LOGGER.error(e.toString());
+            return;
+        }
+
 
         event.getMessage().reply("Team with code: **" + args[0] + "** was successfully created!").queue();
     }

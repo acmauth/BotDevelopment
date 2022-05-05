@@ -1,6 +1,7 @@
 package org.acm.auth.commands;
 
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class SubmitFunctionCommand extends Command{
      /*
         FOR DEBUG USE ONLY
      */
-//    String SUBMITIONS_CHANNEL = "963903242541088848";
+//    String SUBMISSIONS_CHANNEL = "963903242541088848";
 //    String DOC_ID = "963903161570033674";
 //    String DIVIDER_ID = "963912715930316850";
 
@@ -62,24 +63,32 @@ public class SubmitFunctionCommand extends Command{
         }
 
         var attatchments = message.getAttachments();
-        if (attatchments.isEmpty()){
-            message.reply(  "You seem to have forgotten to attach a file\n" +
-                    "If you think this is an error, please contact a Moderator").queue();
-            return;
-        }
+//        if (attatchments.isEmpty()){
+//            message.reply(  "You seem to have forgotten to attach a file\n" +
+//                    "If you think this is an error, please contact a Moderator").queue();
+//            return;
+//        }
 
         // Assemble the relay message
         StringBuilder relay = new StringBuilder();
 
         String content = strip(message.getContentDisplay());
-        String source = message.getChannel().getName() + " *(" + message.getChannel().getId() + ")*";
-        String attatchment = message.getAttachments().get(0).getUrl();
+        String source = "**" + event.getTextChannel().getTopic() + "**" + " | " + message.getChannel().getName() + " | `" + message.getChannel().getId() + "`";
+        String attatchment;
+        if  (!attatchments.isEmpty()){
+            attatchment = message.getAttachments().get(0).getUrl();
+        } else {
+            attatchment = "";
+        }
+
+
 
         relay.append(source).append("\n")
                 .append(content).append("\n")
                 .append(attatchment);
 
         event.getGuild().getTextChannelById(SUBMISSIONS_CHANNEL).sendMessage(relay).queue();
+        message.reply("Solution submitted!").queue();
 
     }
 
