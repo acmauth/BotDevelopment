@@ -105,18 +105,22 @@ public class CreateTeamCommand extends Command {
          */
         try {
             var channel = event.getMessage().getCategory().createTextChannel(args[1]);
+            var voiceChannel = event.getMessage().getCategory().createVoiceChannel(args[1]);
             channel.addPermissionOverride(event.getGuild().getPublicRole(), null, EnumSet.of(Permission.VIEW_CHANNEL));
+            voiceChannel.addPermissionOverride(event.getGuild().getPublicRole(), null, EnumSet.of(Permission.VIEW_CHANNEL));
             channel.setTopic(args[0]);
 
             var docRole = event.getGuild().getRoleById(Dotenv.load().get("PARTICIPANT_ROLE_ID"));
 
             for (Member member: discordMembers){
                 channel.addPermissionOverride(member, EnumSet.of(Permission.VIEW_CHANNEL, Permission.MESSAGE_WRITE), null);
+                voiceChannel.addPermissionOverride(member, EnumSet.of(Permission.VIEW_CHANNEL, Permission.MESSAGE_WRITE), null);
                 if (docRole!=null) {
                     event.getGuild().addRoleToMember(member, docRole).queue();
                 }
             }
             channel.queue();
+            voiceChannel.queue();
         }
         catch (Exception e){
             LOGGER.error(e.toString());
