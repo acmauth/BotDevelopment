@@ -109,3 +109,5 @@ fabric.properties
 
 # Custom config files
 *.json
+
+.env

@@ -1,6 +1,8 @@
 package org.acm.auth;
 
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+
 import javax.security.auth.login.LoginException;
 
 public class App {
@@ -8,7 +10,10 @@ public class App {
         String token = "my.token.here";
         JDABuilder
                 .createDefault(token)
-                .addEventListeners(new EventClass())
+                .enableIntents(GatewayIntent.GUILD_MEMBERS)
+                .addEventListeners(new EventListener())
                 .build();
+
+        System.out.println("Waiting for commands to respond...");
     }
 }
